@@ -1,0 +1,64 @@
+task: detection
+
+evaluator:
+  type: CocoEvaluator
+  iou_types: ['bbox', ]
+
+num_classes: 64 # your dataset classes
+remap_mscoco_category: False
+
+train_dataloader:
+  type: DataLoader
+  dataset:
+    type: CocoDetection
+    img_folder: /media/ubuntu/7C48D20948D1C1D6/aproject/DEIM/dataset/vehicles.v1i.coco/train
+    ann_file: /media/ubuntu/7C48D20948D1C1D6/aproject/DEIM/dataset/vehicles.v1i.coco/train/_annotations.coco.json
+    # img_folder: /media/ubuntu/7C48D20948D1C1D6/aproject/DEIM/dataset/People Detection.v1i.coco/train
+    # ann_file: /media/ubuntu/7C48D20948D1C1D6/aproject/DEIM/dataset/People Detection.v1i.coco/train/annotations/_annotations.coco.json
+    return_masks: False
+    transforms:
+      type: Compose
+      ops: ~
+  shuffle: True
+  num_workers: 4
+  drop_last: True
+  pin_memory: True
+  collate_fn:
+    type: BatchImageCollateFunction
+
+
+val_dataloader:
+  type: DataLoader
+  dataset:
+    type: CocoDetection
+    img_folder: /media/ubuntu/7C48D20948D1C1D6/aproject/DEIM/dataset/vehicles.v1i.coco/valid
+    ann_file: /media/ubuntu/7C48D20948D1C1D6/aproject/DEIM/dataset/vehicles.v1i.coco/valid/_annotations.coco.json
+    # img_folder: /media/ubuntu/7C48D20948D1C1D6/aproject/DEIM/dataset/People Detection.v1i.coco/val
+    # ann_file: /media/ubuntu/7C48D20948D1C1D6/aproject/DEIM/dataset/People Detection.v1i.coco/val/annotations/_annotations.coco.json
+    return_masks: False
+    transforms:
+      type: Compose
+      ops: ~
+  shuffle: False
+  num_workers: 4
+  drop_last: False
+  pin_memory: True
+  collate_fn:
+    type: BatchImageCollateFunction
+
+# val_dataloader:
+#   type: DataLoader
+#   dataset:
+#     type: CocoDetection
+#     img_folder: /root/dataset/dataset_visdrone/VisDrone2019-DET-test-dev/images
+#     ann_file: /root/dataset/dataset_visdrone/VisDrone2019-DET-test-dev/labels/test.json
+#     return_masks: False
+#     transforms:
+#       type: Compose
+#       ops: ~
+#   shuffle: False
+#   num_workers: 4
+#   drop_last: False
+#   pin_memory: True
+#   collate_fn:
+#     type: BatchImageCollateFunction

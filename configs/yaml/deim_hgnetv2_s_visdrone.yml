@@ -1,0 +1,58 @@
+__include__: [
+  '../dfine/dfine_hgnetv2_s_custom.yml',
+  '../dataset/vehicle_detection.yml',
+  '../base/deim.yml',
+]
+
+print_freq: 20
+output_dir: ./outputs/deim_hgnetv2_s_custom-cmssa2-++++++++
+model: TDMG_MG
+DEIM_MG:
+  yaml_path: configs/cfg-improve/dfine-s-TDMG-D-fine.yaml
+#  yaml_path: configs/cfg-improve/dfine-s-MFF-G-M.yaml
+
+#  yaml_path: configs/cfg/dfine-s.yaml
+
+
+optimizer:
+  type: AdamW
+  params:
+    -
+      params: '^(?=.*backbone)(?!.*norm|bn).*$'
+      lr: 0.0001
+    -
+      params: '^(?=.*backbone)(?=.*norm|bn).*$'
+      lr: 0.0001
+      weight_decay: 0.
+    -
+      params: '^(?=.*(?:encoder|decoder))(?=.*(?:norm|bn|bias)).*$'
+      weight_decay: 0.
+
+  lr: 0.0004
+  betas: [0.9, 0.999]
+  weight_decay: 0.0001
+
+# Increase to search for the optimal ema
+epoches: 200 # 148 + 12
+
+## Our LR-Scheduler
+flat_epoch: 104    # 4 + epoch // 2, e.g., 40 = 4 + 72 / 2
+no_aug_epoch: 12
+lr_gamma: 1.0
+
+## Our DataAug
+train_dataloader:
+  dataset:
+    transforms:
+      policy:
+        epoch: [4, 104, 188]   # list
+
+  collate_fn:
+    mixup_epochs: [4, 104]
+    stop_epoch: 188
+    base_size_repeat: ~
+
+  total_batch_size: 8
+
+val_dataloader:
+  total_batch_size: 1

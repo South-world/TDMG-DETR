@@ -1,0 +1,53 @@
+__include__: [
+  '../dfine/dfine_hgnetv2_n_custom.yml',
+  '../base/deim.yml',
+]
+
+print_freq: 20
+output_dir: ./outputs/deim_hgnetv2_n_custom-FDPN2_CMSSA2
+model: TDMG_MG
+DEIM_MG:
+  yaml_path: configs/cfg-improve/dfine-n-TDMG-D-fine.yaml
+optimizer:
+  type: AdamW
+  params:
+    -
+      params: '^(?=.*backbone)(?!.*norm|bn).*$'
+      lr: 0.0001
+    -
+      params: '^(?=.*backbone)(?=.*norm|bn).*$'
+      lr: 0.0001
+      weight_decay: 0.
+    -
+      params: '^(?=.*(?:encoder|decoder))(?=.*(?:norm|bn|bias)).*$'
+      weight_decay: 0.
+
+  lr: 0.0004
+  betas: [0.9, 0.999]
+  weight_decay: 0.0001
+
+# Increase to search for the optimal ema
+epoches: 300 # 148 + 12
+
+## Our LR-Scheduler
+flat_epoch: 104    # 4 + epoch // 2, e.g., 40 = 4 + 72 / 2
+no_aug_epoch: 12
+lr_gamma: 1.0
+
+## Our DataAug
+train_dataloader:
+  dataset:
+#    subset_ratio: 0.5
+    transforms:
+      policy:
+        epoch: [4, 104, 288]   # list
+
+  collate_fn:
+    mixup_epochs: [4, 104]
+    stop_epoch: 288
+    base_size_repeat: ~
+
+  total_batch_size: 3
+
+val_dataloader:
+  total_batch_size: 4

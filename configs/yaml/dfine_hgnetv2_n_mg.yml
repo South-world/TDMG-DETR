@@ -1,0 +1,51 @@
+__include__: [
+  '../dataset/custom_detection.yml',
+  '../runtime.yml',
+  '../base/dataloader_dfine.yml',
+  '../base/optimizer.yml',
+  '../base/dfine_hgnetv2.yml',
+]
+
+print_freq: 400
+output_dir: ./outputs/people-detecion/dfine_hgnetv2_n_visdrone-n
+
+model: TDMG_MG
+
+TDMG_MG:
+  yaml_path: configs/cfg-improve/dfine-n-TDMG-D-fine.yaml
+#  yaml_path: configs/cfg/dfine-n.yaml
+
+optimizer:
+  type: AdamW
+  params:
+    -
+      params: '^(?=.*backbone)(?!.*norm|bn).*$'
+      lr: 0.0001
+    -
+      params: '^(?=.*backbone)(?=.*norm|bn).*$'
+      lr: 0.0001
+      weight_decay: 0.
+    -
+      params: '^(?=.*(?:encoder|decoder))(?=.*(?:norm|bn|bias)).*$'
+      weight_decay: 0.
+
+  lr: 0.0004
+  betas: [0.9, 0.999]
+  weight_decay: 0.0001
+
+
+# Increase to search for the optimal ema
+epoches: 200 # 148 + 4n
+train_dataloader:
+  total_batch_size: 8
+  dataset:
+    transforms:
+      policy:
+        epoch: 188
+  collate_fn:
+    stop_epoch: 188
+    ema_restart_decay: 0.9999
+    base_size_repeat: ~
+
+val_dataloader:
+  total_batch_size: 1
