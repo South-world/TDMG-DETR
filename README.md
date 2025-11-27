@@ -2,8 +2,8 @@
 ### Setup
 
 ```shell
-conda create -n Your Name python=3.11.9
-conda activate Your Name
+conda create -n deim python=3.11.9
+conda activate deim
 pip install -r requirements.txt
 ```
 
