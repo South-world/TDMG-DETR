@@ -18,17 +18,17 @@ encoder:
   - [9, nn.Upsample, [None, 2, "nearest"]] # 11-P3/8
 
   - [[10, 8], Concat, []] # 12-P5/32
-  - [-1, RepNCSPELAN4, [128,64, 21, 2, False, 'silu']] # 13-P5/32
+  - [-1, RepNCSPELAN4, [128,128, 21, 2, False, 'silu']] # 13-P5/32
 
   - [[11, 5], Concat, []] # 14-P3/8
-  - [-1, RepNCSPELAN4, [128,64, 21, 2, False, 'silu']] # 15-P3/8
+  - [-1, RepNCSPELAN4, [128,128, 21, 2, False, 'silu']] # 15-P3/8
 
   - [[13, 9, 15], MGDF,[[3, 5, 7, 9]]] # 16-P4/16
   - [-1, ConvNormLayer_fuse, [128, 3, 2]] # 17-P5/32
   - [16, nn.Upsample, [None, 2, "nearest"]] # 18-P3/8
 
   - [[17, 13], Concat, []] # 19-P5/32
-  - [-1, RepNCSPELAN4, [128, 64, 21, 2, False, 'silu']] # 20-P5/32
+  - [-1, RepNCSPELAN4, [128, 128, 21, 2, False, 'silu']] # 20-P5/32
 
 decoder:
   - [[16, 20], DFINETransformer, {"feat_strides":[16, 32], "hidden_dim": 128, "num_levels": 2, "num_layers": 3, "num_points": [6, 6], "dim_feedforward": 512}]
