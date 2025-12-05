@@ -92,7 +92,7 @@ python train.py -c configs/selftest/deim_hgnetv2_n_visdrone2.yml --seed=0
 ```
 ```shell
 export CUDA_VISIBLE_DEVICES=0
-python train.py -c configs/selftest/deim_hgnetv2_n_visdrone.yml --seed=0  -r outputs/deim_hgnetv2_n_custom3/last.pth
+python train.py -c configs/yaml/dfine_hgnetv2_n_mg.yml --seed=0  
 ```
 
 ```shell
