@@ -6,8 +6,8 @@ __include__: [
 print_freq: 20
 output_dir: ./outputs/deim_hgnetv2_n_custom-FDPN2_CMSSA2
 model: TDMG_MG
-DEIM_MG:
-  yaml_path: configs/cfg-improve/dfine-n-TDMG-D-fine.yaml
+TDMG_MG:
+  yaml_path: configs/cfg-improve/dfine-n-TDMG-DETR.yaml
 optimizer:
   type: AdamW
   params:
